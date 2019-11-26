@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Overview - Serde Version Manual</title>
+        <title>Unsupported features - Serde Version Manual</title>
         
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
@@ -81,7 +81,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div id="sidebar-scrollbox" class="sidebar-scrollbox">
-                <ol class="chapter"><li class="expanded affix "><a href="overview.html">Overview</a></li><li class="expanded "><a href="guide/index.html"><strong aria-hidden="true">1.</strong> Guide</a></li><li><ol class="section"><li class="expanded "><a href="guide/versioned_groups.html"><strong aria-hidden="true">1.1.</strong> Versioned Groups</a></li><li class="expanded "><a href="guide/versioned_types.html"><strong aria-hidden="true">1.2.</strong> Versioned Types</a></li></ol></li><li class="expanded "><a href="unsupported_features.html"><strong aria-hidden="true">2.</strong> Unsupported features</a></li><li class="expanded "><a href="design.html"><strong aria-hidden="true">3.</strong> Design</a></li><li class="expanded "><a href="CHANGELOG.html"><strong aria-hidden="true">4.</strong> Changelog</a></li></ol>
+                <ol class="chapter"><li class="expanded affix "><a href="overview.html">Overview</a></li><li class="expanded "><a href="guide/index.html"><strong aria-hidden="true">1.</strong> Guide</a></li><li><ol class="section"><li class="expanded "><a href="guide/versioned_groups.html"><strong aria-hidden="true">1.1.</strong> Versioned Groups</a></li><li class="expanded "><a href="guide/versioned_types.html"><strong aria-hidden="true">1.2.</strong> Versioned Types</a></li></ol></li><li class="expanded "><a href="unsupported_features.html" class="active"><strong aria-hidden="true">2.</strong> Unsupported features</a></li><li class="expanded "><a href="design.html"><strong aria-hidden="true">3.</strong> Design</a></li><li class="expanded "><a href="CHANGELOG.html"><strong aria-hidden="true">4.</strong> Changelog</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -148,43 +148,27 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1><a class="header" href="#serde-version---a-hrefhttpstravis-ciorgfredpointzeroserde-versionimg-srchttpstravis-ciorgfredpointzeroserde-versionsvgbranchmaster-altbuild-status-a-a-hrefhttpscratesiocratesserde-versionimg-srchttpsimgshieldsiocratesvserde-versionsvg-altlatest-version-a" id="serde-version---a-hrefhttpstravis-ciorgfredpointzeroserde-versionimg-srchttpstravis-ciorgfredpointzeroserde-versionsvgbranchmaster-altbuild-status-a-a-hrefhttpscratesiocratesserde-versionimg-srchttpsimgshieldsiocratesvserde-versionsvg-altlatest-version-a">Serde version   <a href="https://travis-ci.org/fredpointzero/serde-version"><img src="https://travis-ci.org/fredpointzero/serde-version.svg?branch=master" alt="Build Status" /></a> <a href="https://crates.io/crates/serde-version"><img src="https://img.shields.io/crates/v/serde-version.svg" alt="Latest Version" /></a></a></h1>
-<h2><a class="header" href="#versioning-support-for-serde" id="versioning-support-for-serde">Versioning support for serde.</a></h2>
-<p>When software are developped and used at the same time the data formats may change
-from one version to another and persisting data may be produced by a specific version
-and loaded by another version.</p>
-<p>Serde version provide a versioning feature for serde for the main use cases.</p>
-<p>Note 1: Requires the specialization feature.
-Note 2: Use the <code>derive</code> feature to generate the <code>DeserializeVersioned</code> implementation</p>
-<h2><a class="header" href="#goals-of-serde-version" id="goals-of-serde-version">Goals of Serde version</a></h2>
-<p>We aim at solving the case were a type or a set of types in a deserializer's
-data needs to be upgraded to their latest format.
-This is the case when a mandatory property was added or removed,
-or an existing property changed.</p>
-<p>Note: There already is support for added optional properties in serde.
-(Use the <code>default</code> feature of serde)</p>
-<p>Example:
-Let's have a file containing these structure with those version number:
-<code>A: 1, B: 1, C: 2</code> and the current version numbers are: <code>A: 3, B: 2, C: 4</code>.</p>
-<p>Then in latest code version, we have the former data structures versions,
-let's call them: <code>Av1</code>, <code>Av2</code>, <code>Bv1</code>, <code>Cv1</code>, <code>Cv2</code>, <code>Cv3</code>.</p>
-<p>Deserializing, whenever a structure <code>A</code>, <code>B</code> or <code>C</code> is ran into,
-then it is loaded with the appropriate format (in our case it will be <code>Av1</code>, <code>Bv1</code> and <code>Cv2</code>)
-and then converted to <code>A</code>, <code>B</code> or <code>C</code> using the From trait.</p>
-<h2><a class="header" href="#non-goals" id="non-goals">Non goals</a></h2>
-<p>This is based on types that can be upgraded individually.
-Types that needs to be upgraded together is way more complex to handle
-and usually relies on domain specific deserializer.</p>
-<p>So, these data format should be handle with specific <code>Deserialize</code> traits implementations.</p>
+                        <h1><a class="header" href="#unsupported-serde-feature-with-versioning" id="unsupported-serde-feature-with-versioning">Unsupported Serde feature with versioning</a></h1>
+<h2><a class="header" href="#deserialize_in_place-is-not-supported" id="deserialize_in_place-is-not-supported"><code>deserialize_in_place</code> is not supported</a></h2>
+<p>Deserializing in place with versioning support is way more complicated,
+so we don't deal with this in this crate.</p>
+<h2><a class="header" href="#not-supported-with-deserialize_with-callback" id="not-supported-with-deserialize_with-callback">Not supported with <code>deserialize_with</code> callback</a></h2>
+<p>You must take care of the versioning in your callback</p>
+<h2><a class="header" href="#versioning-is-only-supported-for-structs-and-enums" id="versioning-is-only-supported-for-structs-and-enums">Versioning is only supported for structs and enums</a></h2>
+<p>There is no use case where versioning tuples and the unit type is useful.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
+                            <a rel="prev" href="guide/versioned_types.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
 
                         
-                            <a rel="next" href="guide/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="design.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -196,9 +180,13 @@ and usually relies on domain specific deserializer.</p>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
+                    <a href="guide/versioned_types.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
 
                 
-                    <a href="guide/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a href="design.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 
