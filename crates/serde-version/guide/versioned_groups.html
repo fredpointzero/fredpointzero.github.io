@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Overview - Serde Version Manual</title>
+        <title>Versioned Groups - Serde Version Manual</title>
         
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
@@ -11,21 +11,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
-        <link rel="shortcut icon" href="favicon.png">
-        <link rel="stylesheet" href="css/variables.css">
-        <link rel="stylesheet" href="css/general.css">
-        <link rel="stylesheet" href="css/chrome.css">
-        <link rel="stylesheet" href="css/print.css" media="print">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
         <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         
@@ -35,7 +35,7 @@
     <body>
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
-            var path_to_root = "";
+            var path_to_root = "../";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "light";
         </script>
 
@@ -81,7 +81,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div id="sidebar-scrollbox" class="sidebar-scrollbox">
-                <ol class="chapter"><li class="expanded affix "><a href="overview.html" class="active">Overview</a></li><li class="expanded "><a href="guide/index.html"><strong aria-hidden="true">1.</strong> Guide</a></li><li><ol class="section"><li class="expanded "><a href="guide/versioned_groups.html"><strong aria-hidden="true">1.1.</strong> Versioned Groups</a></li><li class="expanded "><a href="guide/versioned_types.html"><strong aria-hidden="true">1.2.</strong> Versioned Types</a></li></ol></li><li class="expanded "><a href="unsupported_features.html"><strong aria-hidden="true">2.</strong> Unsupported features</a></li><li class="expanded "><a href="design.html"><strong aria-hidden="true">3.</strong> Design</a></li><li class="expanded "><a href="CHANGELOG.html"><strong aria-hidden="true">4.</strong> Changelog</a></li></ol>
+                <ol class="chapter"><li class="expanded affix "><a href="../overview.html">Overview</a></li><li class="expanded "><a href="../guide/index.html"><strong aria-hidden="true">1.</strong> Guide</a></li><li><ol class="section"><li class="expanded "><a href="../guide/versioned_groups.html" class="active"><strong aria-hidden="true">1.1.</strong> Versioned Groups</a></li><li class="expanded "><a href="../guide/versioned_types.html"><strong aria-hidden="true">1.2.</strong> Versioned Types</a></li><li class="expanded "><a href="../guide/deriving_deserialize_versioned.html"><strong aria-hidden="true">1.3.</strong> Deriving DeserializeVersioned</a></li></ol></li><li class="expanded "><a href="../unsupported_features.html"><strong aria-hidden="true">2.</strong> Unsupported features</a></li><li class="expanded "><a href="../design.html"><strong aria-hidden="true">3.</strong> Design</a></li><li class="expanded "><a href="../CHANGELOG.html"><strong aria-hidden="true">4.</strong> Changelog</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -116,7 +116,7 @@
                         <h1 class="menu-title">Serde Version Manual</h1>
 
                         <div class="right-buttons">
-                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <a href="../print.html" title="Print this book" aria-label="Print this book">
                                 <i id="print-button" class="fa fa-print"></i>
                             </a>
                             
@@ -148,43 +148,43 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1><a class="header" href="#serde-version---a-hrefhttpstravis-ciorgfredpointzeroserde-versionimg-srchttpstravis-ciorgfredpointzeroserde-versionsvgbranchmaster-altbuild-status-a-a-hrefhttpscratesiocratesserde-versionimg-srchttpsimgshieldsiocratesvserde-versionsvg-altlatest-version-a" id="serde-version---a-hrefhttpstravis-ciorgfredpointzeroserde-versionimg-srchttpstravis-ciorgfredpointzeroserde-versionsvgbranchmaster-altbuild-status-a-a-hrefhttpscratesiocratesserde-versionimg-srchttpsimgshieldsiocratesvserde-versionsvg-altlatest-version-a">Serde version   <a href="https://travis-ci.org/fredpointzero/serde-version"><img src="https://travis-ci.org/fredpointzero/serde-version.svg?branch=master" alt="Build Status" /></a> <a href="https://crates.io/crates/serde-version"><img src="https://img.shields.io/crates/v/serde-version.svg" alt="Latest Version" /></a></a></h1>
-<h2><a class="header" href="#versioning-support-for-serde" id="versioning-support-for-serde">Versioning support for serde.</a></h2>
-<p>When software are developped and used at the same time the data formats may change
-from one version to another and persisting data may be produced by a specific version
-and loaded by another version.</p>
-<p>Serde version provide a versioning feature for serde for the main use cases.</p>
-<p>Note 1: Requires the specialization feature.
-Note 2: Use the <code>derive</code> feature to generate the <code>DeserializeVersioned</code> implementation</p>
-<h2><a class="header" href="#goals-of-serde-version" id="goals-of-serde-version">Goals of Serde version</a></h2>
-<p>We aim at solving the case were a type or a set of types in a deserializer's
-data needs to be upgraded to their latest format.
-This is the case when a mandatory property was added or removed,
-or an existing property changed.</p>
-<p>Note: There already is support for added optional properties in serde.
-(Use the <code>default</code> feature of serde)</p>
-<p>Example:
-Let's have a file containing these structure with those version number:
-<code>A: 1, B: 1, C: 2</code> and the current version numbers are: <code>A: 3, B: 2, C: 4</code>.</p>
-<p>Then in latest code version, we have the former data structures versions,
-let's call them: <code>Av1</code>, <code>Av2</code>, <code>Bv1</code>, <code>Cv1</code>, <code>Cv2</code>, <code>Cv3</code>.</p>
-<p>Deserializing, whenever a structure <code>A</code>, <code>B</code> or <code>C</code> is ran into,
-then it is loaded with the appropriate format (in our case it will be <code>Av1</code>, <code>Bv1</code> and <code>Cv2</code>)
-and then converted to <code>A</code>, <code>B</code> or <code>C</code> using the From trait.</p>
-<h2><a class="header" href="#non-goals" id="non-goals">Non goals</a></h2>
-<p>This is based on types that can be upgraded individually.
-Types that needs to be upgraded together is way more complex to handle
-and usually relies on domain specific deserializer.</p>
-<p>So, these data format should be handle with specific <code>Deserialize</code> traits implementations.</p>
+                        <h1><a class="header" href="#versioned-groups" id="versioned-groups">Versioned groups</a></h1>
+<h2><a class="header" href="#motivation" id="motivation">Motivation</a></h2>
+<p>Types barely change alone, usually a set of types will change during the release of a software.
+So keeping track of a single version number that will define the schema to use for a set of types.</p>
+<h2><a class="header" href="#version-group-and-uris" id="version-group-and-uris">Version group and uris</a></h2>
+<p>The version group is identified by a uri (<code>VersionGroupURI</code>).
+This uri is defined by an api group and a version, like <code>&quot;api_group:version&quot;</code></p>
+<p>You can also define an <code>enum</code> that maps to the appropriate uri with <a href="."><code>version_group_enum</code></a>.</p>
+<h2><a class="header" href="#resolving-the-version-groups" id="resolving-the-version-groups">Resolving the version groups</a></h2>
+<p>When deserializing with serde-version, you need to provide a way to find the version group for 
+each version uri defined in the version header.</p>
+<p>This is the purpose of the <code>VersionGroupResolver</code>.</p>
+<p>You can define one statically with the macro <code>version_group_resolver_static</code>.</p>
+<p>See the <code>versioned_group</code> example.</p>
+<h2><a class="header" href="#example-in-toml" id="example-in-toml">Example in Toml</a></h2>
+<pre><code class="language-toml"># Version header with 2 version uris
+v = [&quot;org.my.company:1.0.2&quot;, &quot;org.my.plugin:1.3.2&quot;] 
+
+[config]
+name = &quot;my config name&quot;
+
+[my_plugin]
+plugin_name = &quot;plugin name&quot;
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
+                            <a rel="prev" href="../guide/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
 
                         
-                            <a rel="next" href="guide/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="../guide/versioned_types.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -196,9 +196,13 @@ and usually relies on domain specific deserializer.</p>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
+                    <a href="../guide/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
 
                 
-                    <a href="guide/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a href="../guide/versioned_types.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 
@@ -221,14 +225,14 @@ and usually relies on domain specific deserializer.</p>
         
 
         
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
         
 
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
 
         <!-- Custom JS scripts -->
         

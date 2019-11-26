@@ -3,7 +3,9 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Changelog - Serde Version Manual</title>
+        <title>Serde Version Manual</title>
+        
+        <meta name="robots" content="noindex" />
         
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
@@ -81,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div id="sidebar-scrollbox" class="sidebar-scrollbox">
-                <ol class="chapter"><li class="expanded affix "><a href="overview.html">Overview</a></li><li class="expanded "><a href="guide/index.html"><strong aria-hidden="true">1.</strong> Guide</a></li><li><ol class="section"><li class="expanded "><a href="guide/versioned_groups.html"><strong aria-hidden="true">1.1.</strong> Versioned Groups</a></li><li class="expanded "><a href="guide/versioned_types.html"><strong aria-hidden="true">1.2.</strong> Versioned Types</a></li></ol></li><li class="expanded "><a href="unsupported_features.html"><strong aria-hidden="true">2.</strong> Unsupported features</a></li><li class="expanded "><a href="design.html"><strong aria-hidden="true">3.</strong> Design</a></li><li class="expanded "><a href="CHANGELOG.html" class="active"><strong aria-hidden="true">4.</strong> Changelog</a></li></ol>
+                <ol class="chapter"><li class="expanded affix "><a href="overview.html">Overview</a></li><li class="expanded "><a href="guide/index.html"><strong aria-hidden="true">1.</strong> Guide</a></li><li><ol class="section"><li class="expanded "><a href="guide/versioned_groups.html"><strong aria-hidden="true">1.1.</strong> Versioned Groups</a></li><li class="expanded "><a href="guide/versioned_types.html"><strong aria-hidden="true">1.2.</strong> Versioned Types</a></li><li class="expanded "><a href="guide/deriving_deserialize_versioned.html"><strong aria-hidden="true">1.3.</strong> Deriving DeserializeVersioned</a></li></ol></li><li class="expanded "><a href="unsupported_features.html"><strong aria-hidden="true">2.</strong> Unsupported features</a></li><li class="expanded "><a href="design.html"><strong aria-hidden="true">3.</strong> Design</a></li><li class="expanded "><a href="CHANGELOG.html"><strong aria-hidden="true">4.</strong> Changelog</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -148,15 +150,148 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1><a class="header" href="#changelog" id="changelog">Changelog</a></h1>
+                        <h1><a class="header" href="#serde-version---a-hrefhttpstravis-ciorgfredpointzeroserde-versionimg-srchttpstravis-ciorgfredpointzeroserde-versionsvgbranchmaster-altbuild-status-a-a-hrefhttpscratesiocratesserde-versionimg-srchttpsimgshieldsiocratesvserde-versionsvg-altlatest-version-a" id="serde-version---a-hrefhttpstravis-ciorgfredpointzeroserde-versionimg-srchttpstravis-ciorgfredpointzeroserde-versionsvgbranchmaster-altbuild-status-a-a-hrefhttpscratesiocratesserde-versionimg-srchttpsimgshieldsiocratesvserde-versionsvg-altlatest-version-a">Serde version   <a href="https://travis-ci.org/fredpointzero/serde-version"><img src="https://travis-ci.org/fredpointzero/serde-version.svg?branch=master" alt="Build Status" /></a> <a href="https://crates.io/crates/serde-version"><img src="https://img.shields.io/crates/v/serde-version.svg" alt="Latest Version" /></a></a></h1>
+<h2><a class="header" href="#versioning-support-for-serde" id="versioning-support-for-serde">Versioning support for serde.</a></h2>
+<p>When software are developped and used at the same time the data formats may change
+from one version to another and persisting data may be produced by a specific version
+and loaded by another version.</p>
+<p>Serde version provide a versioning feature for serde for the main use cases.</p>
+<p>Note 1: Requires the specialization feature.
+Note 2: Use the <code>derive</code> feature to generate the <code>DeserializeVersioned</code> implementation</p>
+<h2><a class="header" href="#goals-of-serde-version" id="goals-of-serde-version">Goals of Serde version</a></h2>
+<p>We aim at solving the case were a type or a set of types in a deserializer's
+data needs to be upgraded to their latest format.
+This is the case when a mandatory property was added or removed,
+or an existing property changed.</p>
+<p>Note: There already is support for added optional properties in serde.
+(Use the <code>default</code> feature of serde)</p>
+<p>Example:
+Let's have a file containing these structure with those version number:
+<code>A: 1, B: 1, C: 2</code> and the current version numbers are: <code>A: 3, B: 2, C: 4</code>.</p>
+<p>Then in latest code version, we have the former data structures versions,
+let's call them: <code>Av1</code>, <code>Av2</code>, <code>Bv1</code>, <code>Cv1</code>, <code>Cv2</code>, <code>Cv3</code>.</p>
+<p>Deserializing, whenever a structure <code>A</code>, <code>B</code> or <code>C</code> is ran into,
+then it is loaded with the appropriate format (in our case it will be <code>Av1</code>, <code>Bv1</code> and <code>Cv2</code>)
+and then converted to <code>A</code>, <code>B</code> or <code>C</code> using the From trait.</p>
+<h2><a class="header" href="#non-goals" id="non-goals">Non goals</a></h2>
+<p>This is based on types that can be upgraded individually.
+Types that needs to be upgraded together is way more complex to handle
+and usually relies on domain specific deserializer.</p>
+<p>So, these data format should be handle with specific <code>Deserialize</code> traits implementations.</p>
+<h1><a class="header" href="#guide" id="guide">Guide</a></h1>
+<p>The way serde-version works is pretty simple.</p>
+<p>The best practice is to have a <em>version header</em> which contains enough data to know
+which version to use for each type to deserialize.</p>
+<p>There are several strategies to handle this situation.</p>
+<p>At the lowest level, serde-version expect to have a <a href="guide/."><code>VersionMap</code></a> with a version number
+for each deserialized type. See <a href="guide/./versioned_types.html">Versioned Types</a> or the <code>versioned_types</code> example.</p>
+<p>But you can also choose to define a unique version for a set of types. We name this a
+<em>version group</em> defined by a <em>version uri</em>. See <a href="guide/./versioned_groups.html">Versioned Groups</a> or the <code>versioned_groups</code> example.</p>
+<h1><a class="header" href="#versioned-groups" id="versioned-groups">Versioned groups</a></h1>
+<h2><a class="header" href="#motivation" id="motivation">Motivation</a></h2>
+<p>Types barely change alone, usually a set of types will change during the release of a software.
+So keeping track of a single version number that will define the schema to use for a set of types.</p>
+<h2><a class="header" href="#version-group-and-uris" id="version-group-and-uris">Version group and uris</a></h2>
+<p>The version group is identified by a uri (<code>VersionGroupURI</code>).
+This uri is defined by an api group and a version, like <code>&quot;api_group:version&quot;</code></p>
+<p>You can also define an <code>enum</code> that maps to the appropriate uri with <a href="guide/."><code>version_group_enum</code></a>.</p>
+<h2><a class="header" href="#resolving-the-version-groups" id="resolving-the-version-groups">Resolving the version groups</a></h2>
+<p>When deserializing with serde-version, you need to provide a way to find the version group for 
+each version uri defined in the version header.</p>
+<p>This is the purpose of the <code>VersionGroupResolver</code>.</p>
+<p>You can define one statically with the macro <code>version_group_resolver_static</code>.</p>
+<p>See the <code>versioned_group</code> example.</p>
+<h2><a class="header" href="#example-in-toml" id="example-in-toml">Example in Toml</a></h2>
+<pre><code class="language-toml"># Version header with 2 version uris
+v = [&quot;org.my.company:1.0.2&quot;, &quot;org.my.plugin:1.3.2&quot;] 
+
+[config]
+name = &quot;my config name&quot;
+
+[my_plugin]
+plugin_name = &quot;plugin name&quot;
+</code></pre>
+<h1><a class="header" href="#versioned-types" id="versioned-types">Versioned types</a></h1>
+<p>In order to deserialize properly, <code>serde-version</code> expect a <a href="guide/."><code>VersionMap</code></a> with a version number
+for each deserialized types. (If a version is not defined, then the default deserialization occurs).</p>
+<p>You can use the macros <a href="guide/."><code>version_map_new!</code></a> and <a href="guide/."><code>version_map_static!</code></a> to help you create <a href="guide/."><code>VersionMap</code></a>.</p>
+<h1><a class="header" href="#deriving-deserializeversioned" id="deriving-deserializeversioned">Deriving <code>DeserializeVersioned</code></a></h1>
+<p>You can generate the implementation of <code>DeserializeVersioned</code> with the derive macro.</p>
+<pre><pre class="playpen"><code class="language-rust">
+<span class="boring">#![allow(unused_variables)]
+</span><span class="boring">fn main() {
+</span>// Only Deserialize is required for previous version
+#[derive(Deserialize)]
+#[serde(rename(deserialize = &quot;A&quot;))]
+struct Av1 {
+    a: u8,
+}
+
+#[derive(Deserialize)]
+#[serde(rename(deserialize = &quot;A&quot;))]
+struct Av2 {
+    b: u8,
+}
+
+// This type has 3 version:
+// - 1 = Av1
+// - 3 = Av2
+// - 4 = current
+#[derive(Deserialize, PartialEq, DeserializeVersioned, Debug)]
+#[serde(rename(deserialize = &quot;A&quot;))]
+#[versions(
+    v(index = 1, type = &quot;Av1&quot;),
+    version(index = 3, type = &quot;Av2&quot;, default),
+    v(index = 4, self)
+)]
+struct A {
+    c: u8,
+}
+<span class="boring">}
+</span></code></pre></pre>
+<h1><a class="header" href="#unsupported-serde-feature-with-versioning" id="unsupported-serde-feature-with-versioning">Unsupported Serde feature with versioning</a></h1>
+<h2><a class="header" href="#deserialize_in_place-is-not-supported" id="deserialize_in_place-is-not-supported"><code>deserialize_in_place</code> is not supported</a></h2>
+<p>Deserializing in place with versioning support is way more complicated,
+so we don't deal with this in this crate.</p>
+<h2><a class="header" href="#not-supported-with-deserialize_with-callback" id="not-supported-with-deserialize_with-callback">Not supported with <code>deserialize_with</code> callback</a></h2>
+<p>You must take care of the versioning in your callback</p>
+<h2><a class="header" href="#versioning-is-only-supported-for-structs-and-enums" id="versioning-is-only-supported-for-structs-and-enums">Versioning is only supported for structs and enums</a></h2>
+<p>There is no use case where versioning tuples and the unit type is useful.</p>
+<h1><a class="header" href="#design" id="design">Design</a></h1>
+<h2><a class="header" href="#versioned-deserialization" id="versioned-deserialization">Versioned deserialization</a></h2>
+<p>A type can be composed of multiple other types and each of those can be versioned.
+Thus we need to know how to migrate any types encountered during the deserialization.</p>
+<p>In the serde model, there 4 case were we actually want to migrate the type:</p>
+<ol>
+<li>when deserializing an element in a sequence</li>
+<li>when deserializing a key of a map</li>
+<li>when deserializing a value of a map</li>
+<li>when deserializing a variant of an enum</li>
+</ol>
+<p>So, we introduce a new trait <code>DeserializeVersioned</code> to handle those cases.
+<code>DeserializeVersioned::next_element</code>, <code>DeserializeVersioned::next_value</code>, <code>DeserializeVersioned::next_key</code>, <code>DeserializeVersioned::variant</code> are the functions that will handles thoses case.</p>
+<p>The trait have a default implementation which is the serde implementation without versioning.</p>
+<p>To have the actual implementation, we use a derive macro that will implement those functions as a specialization.</p>
+<h2><a class="header" href="#versioned-groups-1" id="versioned-groups-1">Versioned groups</a></h2>
+<p>During software development, we barely version a single type, usually a set of types are versioned together.
+It makes simpler to declare the versioned used of a file.</p>
+<p>So instead of declaring the version number of each type, we can instead define a version group id and deduce the 
+version number of a set of types.</p>
+<h1><a class="header" href="#changelog" id="changelog">Changelog</a></h1>
 <p>All notable changes to this project will be documented in this file.</p>
 <p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>,
 and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
-<h2><a class="header" href="#a-hrefhttpsgithubcomolivierlacankeep-a-changelogcompare042headunreleaseda" id="a-hrefhttpsgithubcomolivierlacankeep-a-changelogcompare042headunreleaseda"><a href="https://github.com/olivierlacan/keep-a-changelog/compare/0.4.2...HEAD">Unreleased</a></a></h2>
-<h2><a class="header" href="#a-hrefhttpsgithubcomfredpointzeroserde-versionreleasestag042042a" id="a-hrefhttpsgithubcomfredpointzeroserde-versionreleasestag042042a"><a href="https://github.com/fredpointzero/serde-version/releases/tag/0.4.2">0.4.2</a></a></h2>
+<h2><a class="header" href="#a-hrefhttpsgithubcomolivierlacankeep-a-changelogcompare041headunreleaseda" id="a-hrefhttpsgithubcomolivierlacankeep-a-changelogcompare041headunreleaseda"><a href="https://github.com/olivierlacan/keep-a-changelog/compare/0.4.1...HEAD">Unreleased</a></a></h2>
+<h3><a class="header" href="#added" id="added">Added</a></h3>
+<ul>
+<li>API to aggregate version maps from multiple version uris into a single version map</li>
+<li>API to easily deserialize toml with versioning support (feature gate <code>toml-support</code>)</li>
+</ul>
 <h3><a class="header" href="#changed" id="changed">Changed</a></h3>
 <ul>
-<li>Refactored travis CI</li>
+<li>The <code>VersionMap</code> is now used as a generic parameter and not as <code>&amp;dyn VersionMap</code>.</li>
+<li><code>VersionMap</code> new requires <code>Clone</code>. Users should provide a reference instead of an owned type
+when providing a <code>VersionMap</code> to avoid cloning during the deserialization.</li>
 </ul>
 <h2><a class="header" href="#a-hrefhttpsgithubcomfredpointzeroserde-versionreleasestag041041a" id="a-hrefhttpsgithubcomfredpointzeroserde-versionreleasestag041041a"><a href="https://github.com/fredpointzero/serde-version/releases/tag/0.4.1">0.4.1</a></a></h2>
 <h3><a class="header" href="#changed-1" id="changed-1">Changed</a></h3>
@@ -164,7 +299,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>Refactored documentation files and travis CI</li>
 </ul>
 <h2><a class="header" href="#a-hrefhttpsgithubcomfredpointzeroserde-versionreleasestag040040a" id="a-hrefhttpsgithubcomfredpointzeroserde-versionreleasestag040040a"><a href="https://github.com/fredpointzero/serde-version/releases/tag/0.4.0">0.4.0</a></a></h2>
-<h3><a class="header" href="#added" id="added">Added</a></h3>
+<h3><a class="header" href="#added-1" id="added-1">Added</a></h3>
 <ul>
 <li>Version group apis: macros and utilities to defined version maps, version groups and version uris.</li>
 </ul>
@@ -180,7 +315,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 the key to find its version.</li>
 </ul>
 <h2><a class="header" href="#a-hrefhttpsgithubcomfredpointzeroserde-versionreleasestag030030a" id="a-hrefhttpsgithubcomfredpointzeroserde-versionreleasestag030030a"><a href="https://github.com/fredpointzero/serde-version/releases/tag/0.3.0">0.3.0</a></a></h2>
-<h3><a class="header" href="#added-1" id="added-1">Added</a></h3>
+<h3><a class="header" href="#added-2" id="added-2">Added</a></h3>
 <ul>
 <li>Added changelog</li>
 <li>The <code>v</code> attribute is an alias for the <code>version</code> attribute.</li>
@@ -198,17 +333,17 @@ the key to find its version.</li>
 <code>#[versions(v(index = 1, type = &quot;Av1&quot;), v(index = 2, type = &quot;Av2&quot;))]</code></li>
 </ul>
 <h2><a class="header" href="#a-hrefhttpsgithubcomfredpointzeroserde-versionreleasestag023023a---2019-09-08" id="a-hrefhttpsgithubcomfredpointzeroserde-versionreleasestag023023a---2019-09-08"><a href="https://github.com/fredpointzero/serde-version/releases/tag/0.2.3">0.2.3</a> - 2019-09-08</a></h2>
-<h3><a class="header" href="#added-2" id="added-2">Added</a></h3>
+<h3><a class="header" href="#added-3" id="added-3">Added</a></h3>
 <ul>
 <li>Added an <code>InvalidVersionError</code> when the version number provided is not handled by current code.</li>
 </ul>
 <h2><a class="header" href="#a-hrefhttpsgithubcomfredpointzeroserde-versionreleasestag022022a---2019-09-08" id="a-hrefhttpsgithubcomfredpointzeroserde-versionreleasestag022022a---2019-09-08"><a href="https://github.com/fredpointzero/serde-version/releases/tag/0.2.2">0.2.2</a> - 2019-09-08</a></h2>
-<h3><a class="header" href="#added-3" id="added-3">Added</a></h3>
+<h3><a class="header" href="#added-4" id="added-4">Added</a></h3>
 <ul>
 <li>Added proper README file</li>
 </ul>
 <h2><a class="header" href="#a-hrefhttpsgithubcomfredpointzeroserde-versionreleasestag010010a---2019-09-06" id="a-hrefhttpsgithubcomfredpointzeroserde-versionreleasestag010010a---2019-09-06"><a href="https://github.com/fredpointzero/serde-version/releases/tag/0.1.0">0.1.0</a> - 2019-09-06</a></h2>
-<h3><a class="header" href="#added-4" id="added-4">Added</a></h3>
+<h3><a class="header" href="#added-5" id="added-5">Added</a></h3>
 <ul>
 <li>Versioning feature for serde with additional trait <code>DeserializeVersioned</code> and deserializer <code>VersionedDeserialized</code></li>
 </ul>
@@ -217,10 +352,6 @@ the key to find its version.</li>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                        
-                            <a rel="prev" href="design.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
-                            </a>
                         
 
                         
@@ -231,10 +362,6 @@ the key to find its version.</li>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                
-                    <a href="design.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <i class="fa fa-angle-left"></i>
-                    </a>
                 
 
                 
@@ -269,6 +396,14 @@ the key to find its version.</li>
         <!-- Custom JS scripts -->
         
 
+        
+        
+        <script type="text/javascript">
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+        
         
 
     </body>

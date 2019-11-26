@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Versioned Groups - Serde Version Manual</title>
+        <title>Guide - Serde Version Manual</title>
         
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
@@ -81,7 +81,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div id="sidebar-scrollbox" class="sidebar-scrollbox">
-                <ol class="chapter"><li class="expanded affix "><a href="../overview.html">Overview</a></li><li class="expanded "><a href="../guide/index.html"><strong aria-hidden="true">1.</strong> Guide</a></li><li><ol class="section"><li class="expanded "><a href="../guide/versioned_groups.html" class="active"><strong aria-hidden="true">1.1.</strong> Versioned Groups</a></li><li class="expanded "><a href="../guide/versioned_types.html"><strong aria-hidden="true">1.2.</strong> Versioned Types</a></li></ol></li><li class="expanded "><a href="../unsupported_features.html"><strong aria-hidden="true">2.</strong> Unsupported features</a></li><li class="expanded "><a href="../design.html"><strong aria-hidden="true">3.</strong> Design</a></li><li class="expanded "><a href="../CHANGELOG.html"><strong aria-hidden="true">4.</strong> Changelog</a></li></ol>
+                <ol class="chapter"><li class="expanded affix "><a href="../overview.html">Overview</a></li><li class="expanded "><a href="../guide/index.html" class="active"><strong aria-hidden="true">1.</strong> Guide</a></li><li><ol class="section"><li class="expanded "><a href="../guide/versioned_groups.html"><strong aria-hidden="true">1.1.</strong> Versioned Groups</a></li><li class="expanded "><a href="../guide/versioned_types.html"><strong aria-hidden="true">1.2.</strong> Versioned Types</a></li><li class="expanded "><a href="../guide/deriving_deserialize_versioned.html"><strong aria-hidden="true">1.3.</strong> Deriving DeserializeVersioned</a></li></ol></li><li class="expanded "><a href="../unsupported_features.html"><strong aria-hidden="true">2.</strong> Unsupported features</a></li><li class="expanded "><a href="../design.html"><strong aria-hidden="true">3.</strong> Design</a></li><li class="expanded "><a href="../CHANGELOG.html"><strong aria-hidden="true">4.</strong> Changelog</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -148,20 +148,28 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1><a class="header" href="#versioned-groups" id="versioned-groups">Versioned groups</a></h1>
+                        <h1><a class="header" href="#guide" id="guide">Guide</a></h1>
+<p>The way serde-version works is pretty simple.</p>
+<p>The best practice is to have a <em>version header</em> which contains enough data to know
+which version to use for each type to deserialize.</p>
+<p>There are several strategies to handle this situation.</p>
+<p>At the lowest level, serde-version expect to have a <a href="."><code>VersionMap</code></a> with a version number
+for each deserialized type. See <a href="./versioned_types.html">Versioned Types</a> or the <code>versioned_types</code> example.</p>
+<p>But you can also choose to define a unique version for a set of types. We name this a
+<em>version group</em> defined by a <em>version uri</em>. See <a href="./versioned_groups.html">Versioned Groups</a> or the <code>versioned_groups</code> example.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="../guide/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../overview.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
                         
-                            <a rel="next" href="../guide/versioned_types.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="../guide/versioned_groups.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -173,13 +181,13 @@
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a href="../guide/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a href="../overview.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a href="../guide/versioned_types.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a href="../guide/versioned_groups.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 
